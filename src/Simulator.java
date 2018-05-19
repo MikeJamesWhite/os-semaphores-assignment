@@ -12,7 +12,7 @@ import java.util.*;
 public class Simulator {
     public static final int MILLIS_TO_MINUTES = 33;
     public static final int START_HOUR = 9;
-    
+
     public static void main (String[] args) {
         int numPeople = 0;
         int numBranches = 0;
@@ -34,15 +34,19 @@ public class Simulator {
         }
         catch (Exception e) { e.printStackTrace(); return; }
 
-        // run simulation
-        Taxi t = new Taxi();
+        // clear console and print program intro
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.println("SEMAPHORE SIMULATION v1.0 by Mike James White (WHTMIC023)");
+        System.out.println("---------------------------------------------------------");
+        System.out.println();
+        System.out.println("Number of branches (including HQ): " + numBranches);
+        System.out.println("Number of people: " + numPeople);
+        System.out.println();
 
-        try {
-        t.advance();
-        t.advance();
-        t.request(1, 1);
-        t.hail(3, 1);
-        }
-        catch (Exception e) { e.printStackTrace(); }
+        // run simulation
+        Taxi t = new Taxi(numBranches, numPeople);
+        for (Person p : people) p.start();
+        t.start();
     }
 }

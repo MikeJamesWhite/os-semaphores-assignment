@@ -34,21 +34,20 @@ public class Person extends Thread {
     }
 
     // get to required branch, work until done and work again if another job in queue, else terminate thread
-    public void work() {
+    public void work() throws InterruptedException {
         int[] currentJob = workPattern.poll();
 
-        // hail if not already at branch and wait for pickup
+        // if not already at branch
         if (currentBranch != currentJob[0]) {
-            System.out.println(getCurrentTime() + " branch " + currentBranch + ": person " + id + " hail");
-            
+            // hail taxi and wait for pickup
+            Taxi.getTaxi().hail(currentBranch, id);
 
             // request a dropoff location, then wait
-            System.out.println(getCurrentTime() + " branch " + currentBranch + ": person " + id + " request " + currentJob[0]);
-
+            Taxi.getTaxi().request(currentJob[0], id);
+            currentBranch = currentJob[0]; 
         }
 
         // now arrived at requested branch -- sleep until current job is finished
-        currentBranch = currentJob[0]; 
         sleep(currentJob[1] * Simulator.MILLIS_TO_MINUTES);
 
         // work again if there are more jobs, else thread terminates
@@ -56,6 +55,12 @@ public class Person extends Thread {
     }
 
     public void run() {
-        work();
+        try {
+            work();
+        }
+        catch (InterruptedException e) { e.printStackTrace(); }
+
+        Taxi.finishWork();
+        System.out.println("Person " + id + " finished work!");
     }
 }
