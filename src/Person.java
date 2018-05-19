@@ -58,9 +58,10 @@ public class Person extends Thread {
         try {
             work();
         }
-        catch (InterruptedException e) { e.printStackTrace(); }
+        catch (InterruptedException e) { 
+            e.printStackTrace();
+        }
 
         Taxi.finishWork();
-        System.out.println("Person " + id + " finished work!");
     }
 }

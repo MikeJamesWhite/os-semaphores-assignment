@@ -1,5 +1,3 @@
-import java.util.concurrent.Semaphore;
-
 /**
  * Person.java
  * Class which represents a taxi which is tasked with transporting People when hailed.
@@ -7,6 +5,8 @@ import java.util.concurrent.Semaphore;
  * Author: Mike James White
  * Date: 19/05/2018
  */
+
+import java.util.concurrent.Semaphore;
 
 enum Direction {
     OUTBOUND, INBOUND, WAITING;
@@ -71,11 +71,9 @@ public class Taxi extends Thread {
         if (direction == Direction.WAITING) {
             if (originBranch < currentBranch) { 
                 direction = Direction.INBOUND;
-                System.out.println("Changed to inbound");
             }
             else if (originBranch > currentBranch)  {
                 direction = Direction.OUTBOUND;
-                System.out.println("Changed to outbound");
             }
         }
         branches[originBranch].acquire();
@@ -87,11 +85,9 @@ public class Taxi extends Thread {
         if (direction == Direction.WAITING) {
             if (requestedBranch < currentBranch) { 
                 direction = Direction.INBOUND;
-                System.out.println("Changed to inbound");
             }
             else if (requestedBranch > currentBranch)  {
                 direction = Direction.OUTBOUND;
-                System.out.println("Changed to outbound");
             }
         }
         branches[requestedBranch].acquire();
@@ -112,18 +108,16 @@ public class Taxi extends Thread {
 
                 if (!change) break;
                 else {
-                    for (int i = currentBranch - 1; i > 0; i--) {
+                    for (int i = currentBranch - 1; i >= 0; i--) {
                         if (shouldStop(i)) { change = false; break; }
                     }
                 }
 
                 if (change) { 
                     direction = Direction.WAITING;
-                    System.out.println("Changed to waiting");
                 }
                 else { 
                     direction = Direction.INBOUND;
-                    System.out.println("Changed to inbound");
                 }
 
                 break;
@@ -132,11 +126,11 @@ public class Taxi extends Thread {
                 currentBranch -= 1;
 
                 // check if state should change
-                for (int i = currentBranch - 1; i > 0; i--) {
+                for (int i = currentBranch - 1; i >= 0; i--) {
                     if (shouldStop(i)) { change = false; break; }
                 }
 
-                if (change) break;
+                if (!change) break;
                 else {
                     for (int i = currentBranch + 1; i < branches.length; i++) {
                         if (shouldStop(i)) { change = false; break; }
@@ -145,11 +139,9 @@ public class Taxi extends Thread {
 
                 if (change) { 
                     direction = Direction.WAITING;
-                    System.out.println("Changed to waiting");
                 }
                 else {
                     direction = Direction.OUTBOUND;
-                    System.out.println("Changed to outbound");
                 }
 
                 break;
