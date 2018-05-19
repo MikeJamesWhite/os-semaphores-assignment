@@ -18,4 +18,4 @@ clean:
 	rm -r -f $(BIN)/*
 
 run: all
-	java $(RUN_OPTIONS) Simulator
+	java $(RUN_OPTIONS) Simulator testinput/test1.txt

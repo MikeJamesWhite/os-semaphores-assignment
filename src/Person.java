@@ -8,12 +8,15 @@
 
 import java.util.*;
 
-public class Person {
+public class Person extends Thread {
     public int id;
+    private int currentBranch;
     public Queue<int[]> workPattern;
 
     // parse an input file string and attain attributes for new Person object
     public Person(String s) {
+        currentBranch = 0;
+
         s = s.trim();
         
         // get ID
@@ -26,12 +29,33 @@ public class Person {
         // create workPattern array
         workPattern = new ArrayDeque<int[]>();
         for (int i = 0; i < split.length/2; i++) {
-            workPattern.add( new int[] {Integer.parseInt(split[i*2]), Integer.parseInt(split[(i*2) + 1]) });
+            workPattern.add( new int[] { Integer.parseInt(split[i*2]), Integer.parseInt(split[(i*2) + 1]) });
         }
     }
 
     // get to required branch, work until done and work again if another job in queue, else terminate thread
     public void work() {
+        int[] currentJob = workPattern.poll();
 
+        // hail if not already at branch and wait for pickup
+        if (currentBranch != currentJob[0]) {
+            System.out.println(getCurrentTime() + " branch " + currentBranch + ": person " + id + " hail");
+            
+
+            // request a dropoff location, then wait
+            System.out.println(getCurrentTime() + " branch " + currentBranch + ": person " + id + " request " + currentJob[0]);
+
+        }
+
+        // now arrived at requested branch -- sleep until current job is finished
+        currentBranch = currentJob[0]; 
+        sleep(currentJob[1] * Simulator.MILLIS_TO_MINUTES);
+
+        // work again if there are more jobs, else thread terminates
+        if (!workPattern.isEmpty()) work();
+    }
+
+    public void run() {
+        work();
     }
 }

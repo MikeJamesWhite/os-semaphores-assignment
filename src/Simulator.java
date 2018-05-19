@@ -10,7 +10,9 @@ import java.io.*;
 import java.util.*;
 
 public class Simulator {
-
+    public static final int MILLIS_TO_MINUTES = 33;
+    public static final int START_HOUR = 9;
+    
     public static void main (String[] args) {
         int numPeople = 0;
         int numBranches = 0;
@@ -33,6 +35,14 @@ public class Simulator {
         catch (Exception e) { e.printStackTrace(); return; }
 
         // run simulation
-        
+        Taxi t = new Taxi();
+
+        try {
+        t.advance();
+        t.advance();
+        t.request(1, 1);
+        t.hail(3, 1);
+        }
+        catch (Exception e) { e.printStackTrace(); }
     }
 }
