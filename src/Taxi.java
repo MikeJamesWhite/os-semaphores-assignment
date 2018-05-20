@@ -155,7 +155,7 @@ public class Taxi extends Thread {
         try {
             while (numPeople > 0) {
                 if (shouldStop(currentBranch)) {
-                    if (!start) System.out.println(getCurrentTime() + " branch " + currentBranch + ": taxi arrive");
+                    if (!start && !stopped) System.out.println(getCurrentTime() + " branch " + currentBranch + ": taxi arrive");
                     else start = false;
 
                     branches[currentBranch].release(numPeople);
